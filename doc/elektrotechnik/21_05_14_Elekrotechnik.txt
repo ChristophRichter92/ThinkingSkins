@@ -1,0 +1,126 @@
+- Pins: 20mA kommen aus normalen Pins.
+- Pins sind oft doppelt belegt. Immer im Datenblatt nachschauen welche für z.B. welches Protokoll benutzt werden.
+- Netzteil: 1A Grenze, wenn mehr kokelt die Sicherheitsdiode durch.
+- Immer Widerstand vor LED
+- Gleichstrom wird benutzt
+- R=U/I Ohmsches Gesetz
+- Reihenschaltung: 
+	-> Stromstärke ist überall gleich (I = konstant)
+	-> Spannung fällt an jedem Bauteil ab, Summe dieser Spannungen (U)
+	-> Widerstand zu klein: zu viel Strom, heller und PUFF
+	
+	)----|==|---|>|-------|
+	
+- Potenziometer: 2 Widerstände, dazwischen wird Spannungen geteilt (Spannungsteiler)
+	-> Gesamtwiderstand Rges = R1 + R2
+	-> Iges = Uges/(R1+R2)
+	
+	)----|==|--.--|==|-----...
+	
+- Beispiel: Uges = 5V, LED: If = 20 mA, Uc = 2V
+	-> (5V-2V)/(20mA) = 3V/20mV = 150 Ohm
+	
+	->LED braucht 2 Volt, 3 in Reihenschaltung brauchen 6V => zu wenig Strom
+	
+	)----|==|---|>|--|>|--|>|--------|
+	
+- Parallelschaltung: (z.B., vorzugsweise keinen Transistor benutzen)
+	-> man braucht Schalter: NPN-Transistor vor Gabelung zu Parallelschaltung und VCC 5V
+
+	     ____|==|___|>|____
+	    |                  |
+	)---|____|==|___|>|____|
+	    |                  |
+		|____|==|___|>|____|
+		                   |
+						   |
+						   -
+						   
+			    VCC	 ____|==|___|>|____
+				|	|                  |
+	)---|==|--NPN---|____|==|___|>|____|
+					|                  |
+					|____|==|___|>|____|
+									   |
+									   |
+									   -
+	-> Widerstand: großer. z.B. 4,7 kOhm vor Basis des Transistors schalten
+	-> Transistor: runder Kopf, 3 Ausgänge C, B, E (Basiskollektor, Transmitter)
+		-> B Eingang, VCC an C, Schaltung an E
+		-> bis 12V ok, aber im allgemeinen nicht besonders stark
+	
+	-> besseres Bauteil: Mosfet mit Gate (1), Drain (2), Source (3) als Pins
+		-> potenter, stärker. Brauchen manchmal Kühlung
+		-> kann ohne Vorwiderstand benutzt werden, aber besser mit
+		-> Bsp: Motor an D, GND an S, G Eingang. Freilaufdiode + Widerstand an Motor, sonst schnell kaputt
+			-> An Eingang direkt davor noch mal einen Zweig mit Widerstand 10 Ohm zum GND
+			-> Widerstand davor mit 180 Ohm
+		-> allgemein mit Motor: ausprobieren. Falls LEDs statt Motor: keine Freilaufdiode. Raussuchen.
+		
+	-> bei Servo: schon eingebaute Trennung
+		-> Spannung wird verglichen mit Soll-Spannung. Wird immer ausgeglichen.
+		-> Pins: 5V (Eingang), S für Signal, GND
+		-> S: PWM Signal. (Pins mit ~).
+		
+- analoge Sensoren: Grundlage ist Spannungsteiler. Einer der Widerstände ist Sensor.
+	-> Spannungsteiler geht in Analogpin (AnalogRead())
+	-> bei Sensorik ändert sich das Verhältnis der Spannungen (1 Widerstand veränderbar, 1 Referenz)
+	-> Sensoren sind nicht so genau, daher fertige Chips. Verschiedene Anschaltungen.
+	
+- Serielle Kommunikation (UART, I²C, TWC, OneWire(?), SPI, CAN(?;Uno vllt nicht))
+	-> etabliertestes: UART. Dafür bei Uno Pin 0 und 1
+	-> 9600 baud... bit/s, 8 Bit N 1
+	-> Sehr Rauschanfällig!
+	-> Zeitabhängig, Takt ist gleich. Wohldefinierte Taktrate
+		(Quarze. Auf Uno vorhanden, bei neuen Schaltungen einbauen für genaue Synchronisierung!)
+	-> auf Leitung ist 1, Startbit gesehen? (bzw möchte ich einen sehen?) -> Serial.Read()
+	-> viele Verluste, gerade bei mehreren Prozessen.
+	
+		PC             Uno
+		Px-------------Tx
+		Tx-------------Rx
+		END------------END
+		
+	-> NIE GND vergessen! Verbinden damit Nullpotenzial klar ist
+	
+	-> welches Protokoll am besten? wie viele Bits übertragen etc, Schichten
+	-> physical layer interessiert nicht falls man es nicht bauen muss, mega access layer, ...
+	-> hohes layer: für Kommunikation.
+	-> versuchen möglichst wenig zu übertragen. Möglichkeit: MIDI Protokoll
+		-> auf hoher Ebene z.B. XML, Ethernet, TCP/IP, ...
+	-> recherchieren was die Anforderungen sind & was sinnvoll ist.
+	-> Bsp: I²C/TWI. 2-wire (2 Drähte), an beiden je eine Verbingung zu Geräten. (auch drahtlos mögl.)
+		-> 9,6 kBit/s
+		-> beide Drähte mit Pullupwiderstand mit VCC verbunden
+		-> häufig in Geräten. Müssen alle Geräte können (z.B. Chips)
+		-> Arduino als Master
+		-> Bussystem. 
+		-> Namen hier nicht Rx und Tx sondern SDA und SCL (Daten- und Clockleitung). 
+			-> Richtige Pins im Datenblatt des Arduinos nachschauen & Treiber laden.
+		-> Master gibt den Takt vor (relativ kompliziert), Slave kann passend Daten empfangen/ senden
+		-> Slaves haben Adressen, z.B. 0x50. Meistens sind die Adressen fest. Nur für wenige Chips geeignet
+		-> mit Seriellen ist es schöner.
+	-> Bsp: SPI (schneller als I²C) (Ethernet, Bluetooth, ...)
+		-> 10 mBit/s
+		-> Leitungen: CS, MISO (Slave -> Master), MOSI (Master -> Slave), SLR (Clock)
+		-> point zu point, meist nur 1 Master, 1 Slave. Daher schnell.
+	-> es gibt keine Standards. YEY (gut wäre z.B. TCP/IP oder Ethernet)
+	
+- Module die wir brauchen:
+	-> evt. BLE, vllt. Wifi wired
+	-> Sensoren:
+		-> Daten senden/verarbeiten
+		-> Temperatur
+		-> CO2
+		-> Licht
+		-> Bewegung
+		-> Lautstärke
+		-> Feuchtigkeit
+		-> Kompass/Richtung
+		-> Näherung
+		-> Anzahl an Personen
+		-> Füllstand (Wassertank Moos)
+	-> If this then that: Trigger die Events auslösen (oder andere ähnliche Dienste)
+	-> es sollte Benutzereinstellungen geben
+	
+"Hausaufgaben": ins L²P-Wiki schreiben wer in welcher Gruppe ist & für FabLab Termin eintragen.

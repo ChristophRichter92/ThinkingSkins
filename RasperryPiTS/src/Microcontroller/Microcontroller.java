@@ -12,6 +12,7 @@ import java.util.List;
 public abstract class Microcontroller extends Component {
 
 	//attributes
+	protected final int BAUDRATE = 9600;
 	private List<Sensor> connectedSensors;
 	private List<Actor> connectedActors;
 	
@@ -25,7 +26,12 @@ public abstract class Microcontroller extends Component {
 	}
 	
 	//abstract methods
-	abstract void sendMessage(int message);
+	/**
+	 * sends a message to the microcontroller and reveives its message
+	 * @param message you want to send 
+	 * @return message yoo get from the microcontroller
+	 */
+	abstract String sendMessage(String message);
 	
 	//methods
 	/**
@@ -75,7 +81,7 @@ public abstract class Microcontroller extends Component {
 			connectedActors.remove(a);
 		}
 	}
-
+	
 	//Getter methods
 	/**
 	 * @return the connectedSensors
@@ -89,5 +95,12 @@ public abstract class Microcontroller extends Component {
 	 */
 	public List<Actor> getConnectedActors() {
 		return connectedActors;
+	}
+
+	/**
+	 * @return the bAUDRATE
+	 */
+	public int getBAUDRATE() {
+		return BAUDRATE;
 	}	
 }

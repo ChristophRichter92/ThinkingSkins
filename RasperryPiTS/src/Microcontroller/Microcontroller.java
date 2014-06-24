@@ -31,7 +31,7 @@ public abstract class Microcontroller extends Component {
 	 * @param message you want to send 
 	 * @return message yoo get from the microcontroller
 	 */
-	abstract String sendMessage(String message);
+	abstract public String sendMessage(String message);
 	
 	//methods
 	/**

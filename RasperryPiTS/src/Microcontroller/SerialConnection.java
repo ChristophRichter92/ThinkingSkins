@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.CharBuffer;
 import java.util.Enumeration;
 import java.util.Scanner;
 
@@ -28,7 +29,7 @@ public class SerialConnection implements SerialPortEventListener
 	private static final int BAUD_RATE = 9600; //baud rate to 9600bps
 	private BufferedReader input;               //declaring my input buffer
 	private OutputStream output;                //declaring output stream
-	Scanner inputName;          //user input name
+	private String in;          //user input name
 
 	//constructor
 	public SerialConnection(int baudRate, String portName) 
@@ -44,7 +45,7 @@ public class SerialConnection implements SerialPortEventListener
 	private void initialize()
 	{
         CommPortIdentifier ports = null;      //to browse through each port identified
-        Enumeration portEnum = CommPortIdentifier.getPortIdentifiers(); //store all available ports
+		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers(); //store all available ports
         while(portEnum.hasMoreElements()) //browse through available ports
         {  
         	ports = (CommPortIdentifier)portEnum.nextElement();
@@ -69,7 +70,7 @@ public class SerialConnection implements SerialPortEventListener
 	 */
 	private void portConnect()
 	{
-        //connect to port
+		//connect to port
         try
         {
         	serialPort = (SerialPort)portId.open(this.getClass().getName(),TIME_OUT);   
@@ -119,8 +120,9 @@ public class SerialConnection implements SerialPortEventListener
 			try 
 			{
 				String inputLine=input.readLine();
-				System.out.println(inputLine);
-	            inputName = new Scanner(System.in); //get user name
+				in = inputLine;
+				System.out.println(in);
+	            //inputName = new Scanner(System.in); //get user name
 	            //name = inputName.nextLine();
 	            //name = name + '\n';
 	            //System.out.printf("%s",name);
@@ -154,33 +156,47 @@ public class SerialConnection implements SerialPortEventListener
 	 * Sends a message to the connected port
 	 * @param message you want to send
 	 */
-	public void write(String message)
+	private void write(String message)
 	{
-		portConnect();
+		//portConnect();
 		try 
 		{
 			output.write(message.getBytes());
+			output.flush();
 		} 
 		catch (IOException e) 
 		{
 			System.out.println("Can not write data");
 		}
-		close();
+		//close();
 	}
 		
-	public String read()
+	private String read()
 	{
-		portConnect();
+		//portConnect();
 		String res = "";
-		try 
+		
+		res = in;
+		/*try 
 		{
-			res = input.readLine();
+			
+			res = input.readLine();	        
 		} 
 		catch (IOException e) 
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
+		//close();	
+		return res;
+	}
+	
+	public String readAndWrite(String message)
+	{
+		String res = "";
+		portConnect();
+		write(message+'\n');
+		res = read();
 		close();
 		return res;
 	}

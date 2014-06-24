@@ -27,11 +27,10 @@ public class Arduino extends Microcontroller {
 	 * Sends a message via COM port to the connected microkontroller an receives 
 	 */
 	@Override
-	String sendMessage(String message)
+	public String sendMessage(String message)
 	{
-		SerialConnection con = new SerialConnection(9600, "/dev/ttyUSB0");
-		con.write(message);	
-		String res = con.read();
+		SerialConnection con = new SerialConnection(9600, "COM4");//"/dev/ttyUSB0");
+		String res = con.readAndWrite(message);
 		return res;
 	}
 }

@@ -7,9 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.CharBuffer;
 import java.util.Enumeration;
-import java.util.Scanner;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
@@ -29,13 +27,21 @@ public class SerialConnection implements SerialPortEventListener
 	private static final int BAUD_RATE = 9600; //baud rate to 9600bps
 	private BufferedReader input;               //declaring my input buffer
 	private OutputStream output;                //declaring output stream
-	private String in;          //user input name
+	private String in;
+	
 
 	//constructor
 	public SerialConnection(int baudRate, String portName) 
 	{
 		this.portName = portName;
 		initialize();
+		portConnect();
+		try {	//needed for timeout
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	//methods
@@ -113,7 +119,7 @@ public class SerialConnection implements SerialPortEventListener
      * @param event The serial event
      */
     @Override
-	public void serialEvent(SerialPortEvent event) 
+	public synchronized void serialEvent(SerialPortEvent event) 
 	{ 	   
 		if (event.getEventType() == SerialPortEvent.DATA_AVAILABLE) //Read data
 		{ 
@@ -121,12 +127,7 @@ public class SerialConnection implements SerialPortEventListener
 			{
 				String inputLine=input.readLine();
 				in = inputLine;
-				System.out.println(in);
-	            //inputName = new Scanner(System.in); //get user name
-	            //name = inputName.nextLine();
-	            //name = name + '\n';
-	            //System.out.printf("%s",name);
-	            //output.write(name.getBytes());     //sends the user name
+				notify();
 			} 
 			catch (Exception e) 
 			{
@@ -142,7 +143,7 @@ public class SerialConnection implements SerialPortEventListener
 	/**
 	 * closes the opened port
 	 */
-	private void close()
+	public synchronized void close()
 	{
 		if(serialPort!=null)
 		{
@@ -155,49 +156,49 @@ public class SerialConnection implements SerialPortEventListener
 	/**
 	 * Sends a message to the connected port
 	 * @param message you want to send
+	 * @throws InterruptedException 
 	 */
-	private void write(String message)
+	private synchronized void write(String message)
 	{
 		//portConnect();
 		try 
 		{
 			output.write(message.getBytes());
 			output.flush();
+			wait();
 		} 
 		catch (IOException e) 
 		{
 			System.out.println("Can not write data");
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		//close();
 	}
-		
+	
+	/**
+	 * read input buffer
+	 * @return read data
+	 */
 	private String read()
 	{
 		//portConnect();
 		String res = "";
-		
 		res = in;
-		/*try 
-		{
-			
-			res = input.readLine();	        
-		} 
-		catch (IOException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 		//close();	
 		return res;
 	}
 	
+	/**
+	 * write data and get response
+	 * @param message you want to send
+	 * @return response from the port
+	 */
 	public String readAndWrite(String message)
 	{
 		String res = "";
-		portConnect();
 		write(message+'\n');
 		res = read();
-		close();
 		return res;
 	}
 }

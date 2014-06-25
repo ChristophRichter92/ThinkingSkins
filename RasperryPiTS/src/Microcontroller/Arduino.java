@@ -11,6 +11,7 @@ package Microcontroller;
 public class Arduino extends Microcontroller {
 
 	//attributes
+	private SerialConnection con;	//serial connection to the arduino
 	
 	//Constructor
 	/**
@@ -20,7 +21,7 @@ public class Arduino extends Microcontroller {
 	 */
 	public Arduino(int id, String name) {
 		super(id, name);
-		// TODO Auto-generated constructor stub
+		con = new SerialConnection(9600, "COM4");//"/dev/ttyUSB0");
 	}
 
 	/**
@@ -29,8 +30,15 @@ public class Arduino extends Microcontroller {
 	@Override
 	public String sendMessage(String message)
 	{
-		SerialConnection con = new SerialConnection(9600, "COM4");//"/dev/ttyUSB0");
 		String res = con.readAndWrite(message);
 		return res;
+	}
+
+	/**
+	 * closes serial connection
+	 */
+	public void cleanUp() 
+	{
+		con.close();
 	}
 }

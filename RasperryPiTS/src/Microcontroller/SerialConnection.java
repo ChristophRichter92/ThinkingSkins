@@ -34,6 +34,10 @@ public class SerialConnection implements SerialPortEventListener
 	public SerialConnection(int baudRate, String portName) 
 	{
 		this.portName = portName;
+		
+        //Message
+		System.out.println("Initializing:");
+		
 		initialize();
 		portConnect();
 		try {	//needed for timeout
@@ -42,6 +46,9 @@ public class SerialConnection implements SerialPortEventListener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+        //Message
+		System.out.println("-> done");
 	}
 	
 	//methods
@@ -49,8 +56,8 @@ public class SerialConnection implements SerialPortEventListener
 	 * initializes the serial connection
 	 */
 	private void initialize()
-	{
-        CommPortIdentifier ports = null;      //to browse through each port identified
+	{	
+		CommPortIdentifier ports = null;      //to browse through each port identified
 		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers(); //store all available ports
         while(portEnum.hasMoreElements()) //browse through available ports
         {  

@@ -1,13 +1,18 @@
+#include <Sound.h>
+
 /*
 *  Description:
 *  Main Programm for our Thinking Skin:
 *    - react to special commands and executes them
 */
+
+//attributes
+//Sound mySound(5,4,0);
 String inputString = "";         // a string to hold incoming data
 boolean stringComplete = false;  // whether the string is complete
 
 void setup() //initialize
-{
+{  
   // initialize serial:
   Serial.begin(9600);
   digitalWrite(13, LOW); 
@@ -29,6 +34,17 @@ void loop() {
     else if(inputString == "Sound")
     {
       Serial.println("Sounds nice :D");
+    }
+    else if(inputString == "getSound()") //read Soundlevel
+    {
+      int spectrum[7];
+      //mySound.getSoundSpectrum(spectrum);
+      String result = "";
+      for(int i = 0; i < 7; i++)
+      {
+        result = result + spectrum[i];
+      }
+      Serial.println(result);
     }
     else if(inputString == "your command")
     {

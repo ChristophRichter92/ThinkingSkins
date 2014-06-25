@@ -33,6 +33,11 @@ public class Main {
 					String out2 = ard.sendMessage("Sound");
 					System.out.println("You: Sound");
 					System.out.println("Arduino: " + out2);
+					
+					String out3 = ard.sendMessage("getSound()");
+					System.out.println("You: getSound()");
+					System.out.println("Arduino: " + out3);
+					
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {

@@ -24,7 +24,7 @@ public class SerialConnection implements SerialPortEventListener
 	private String portName;
 	private CommPortIdentifier portId  = null;       //my COM port
 	private static final int TIME_OUT = 2000;    //time in milliseconds
-	private static final int BAUD_RATE = 9600; //baud rate to 9600bps
+	private int baudRate = 9600; //baud rate to 9600bps
 	private BufferedReader input;               //declaring my input buffer
 	private OutputStream output;                //declaring output stream
 	private String in;
@@ -90,7 +90,7 @@ public class SerialConnection implements SerialPortEventListener
         	System.out.println("Port open succesful"); 
     
         	//set serial port parameters
-        	serialPort.setSerialPortParams(BAUD_RATE,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+        	serialPort.setSerialPortParams(baudRate,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
         }
         catch(PortInUseException e){
             System.out.println("Port already in use");

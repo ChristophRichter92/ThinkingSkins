@@ -28,7 +28,7 @@ public abstract class Sensor extends Component {
 	 * TODO maybe change data type
 	 * @return
 	 */
-	abstract int readData();
+	public abstract String readData();
 
 	//getter methods
 	/**

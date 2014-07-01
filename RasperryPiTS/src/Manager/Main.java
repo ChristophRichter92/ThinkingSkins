@@ -4,39 +4,48 @@
 package Manager;
 
 import Microcontroller.Arduino;
+import Microcontroller.Microphone;
 
 /**
  * @author Christoph
  *
  */
-public class Main {
+public class Main 
+{
+	//Global attributes
+	static Arduino uno;
+	
+	public static void initializeSystem()
+	{
+		uno = new Arduino(1, "Arduino1");
+		//add available components
+		uno.getConnectedSensors().add(new Microphone(2, "Microfon1", uno));
+		//TODO add other components
+	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) 
 	{
+		initializeSystem();
 		Thread t=new Thread() 
 		{
 			public void run() 
 			{
 				System.out.println("Thinking Skins!");
 				System.out.println("==============================");
-				Arduino ard = new Arduino(1, "Arduino1");
-				String out = ard.sendMessage("Hello");
+				String out = uno.sendMessage("Hello");
 				System.out.println("You: Hello");
 				System.out.println("Arduino: " + out);
 				
 				int i = 0;
 				while(i < 60)
 				{
-					String out2 = ard.sendMessage("Sound");
-					System.out.println("You: Sound");
-					System.out.println("Arduino: " + out2);
-					
-					String out3 = ard.sendMessage("getSound()");
-					System.out.println("You: getSound()");
-					System.out.println("Arduino: " + out3);
+					Microphone mic = (Microphone) uno.getConnectedSensors().get(0);
+					String out3 = mic.readData();
+					System.out.println("Microphone value: ");
+					System.out.println(out3);
 					
 					try {
 						Thread.sleep(1000);
@@ -48,7 +57,7 @@ public class Main {
 				}
 				
 				//clean up
-				ard.cleanUp();
+				uno.cleanUp();
 		        //Message
 				System.out.println("End...");
 				System.out.println("Good bye");

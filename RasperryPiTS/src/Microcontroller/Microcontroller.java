@@ -3,7 +3,7 @@
  */
 package Microcontroller;
 
-import java.util.List;
+import java.util.LinkedList;
 
 /**
  * @author Christoph
@@ -13,16 +13,19 @@ public abstract class Microcontroller extends Component {
 
 	//attributes
 	protected final int BAUDRATE = 9600;
-	private List<Sensor> connectedSensors;
-	private List<Actor> connectedActors;
+	private LinkedList<Sensor> connectedSensors;
+	private LinkedList<Actor> connectedActors;
 	
 	/**
 	 * @param id unique ID
 	 * @param name Name of the microcontroller
 	 */
-	public Microcontroller(int id, String name) {
+	public Microcontroller(int id, String name)
+	{
 		super(id, name);
-		// TODO Auto-generated constructor stub
+		//init lists
+		connectedSensors = new LinkedList<Sensor>();
+		connectedActors = new LinkedList<Actor>();
 	}
 	
 	//abstract methods
@@ -86,14 +89,14 @@ public abstract class Microcontroller extends Component {
 	/**
 	 * @return the connectedSensors
 	 */
-	public List<Sensor> getConnectedSensors() {
+	public LinkedList<Sensor> getConnectedSensors() {
 		return connectedSensors;
 	}
 
 	/**
 	 * @return the connectedActors
 	 */
-	public List<Actor> getConnectedActors() {
+	public LinkedList<Actor> getConnectedActors() {
 		return connectedActors;
 	}
 

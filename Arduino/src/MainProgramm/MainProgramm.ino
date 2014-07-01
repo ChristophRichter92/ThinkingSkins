@@ -7,9 +7,36 @@
 */
 
 //attributes
+int spectrumReset=5;
+int spectrumStrobe=4;
+int spectrumAnalog=0;  //0 for left channel, 1 for right.
+int band = 0; //used spectrum band
+// spectrum analyzer read values will be kept here.
+int spectrum[7];
+
 //Sound mySound(5,4,0);
 String inputString = "";         // a string to hold incoming data
 boolean stringComplete = false;  // whether the string is complete
+
+void setupSound() 
+{
+  //Setup pins to drive the spectrum analyzer. 
+  pinMode(spectrumReset, OUTPUT);
+  pinMode(spectrumStrobe, OUTPUT);
+ 
+   //Init spectrum analyzer
+  digitalWrite(spectrumStrobe,LOW);
+    delay(1);
+  digitalWrite(spectrumReset,HIGH);
+    delay(1);
+  digitalWrite(spectrumStrobe,HIGH);
+    delay(1);
+  digitalWrite(spectrumStrobe,LOW);
+    delay(1);
+  digitalWrite(spectrumReset,LOW);
+    delay(5);
+  // Reading the analyzer now will read the lowest frequency. 
+}
 
 void setup() //initialize
 {  
@@ -18,6 +45,8 @@ void setup() //initialize
   digitalWrite(13, LOW); 
   // reserve 200 bytes for the inputString:
   inputString.reserve(200);
+  //setup sound
+  setupSound();
 }
 
 //main loop
@@ -37,12 +66,12 @@ void loop() {
     }
     else if(inputString == "getSound()") //read Soundlevel
     {
-      int spectrum[7];
-      //mySound.getSoundSpectrum(spectrum);
+      //int spectrum[7];
+      readSpectrum();
       String result = "";
       for(int i = 0; i < 7; i++)
       {
-        result = result + spectrum[i];
+        result = result + " " + spectrum[i];
       }
       Serial.println(result);
     }
@@ -87,4 +116,17 @@ void serialEvent() {
   }
 }
 
+// Read 7 band equalizer.
+void readSpectrum()
+{
+   digitalWrite(spectrumReset, HIGH);
+   digitalWrite(spectrumReset, LOW);
+    for(band=0; band <7; band++)
+    {
+      digitalWrite(spectrumStrobe,LOW); // strobe pin on the shield - kicks the IC up to the next band
+      delayMicroseconds(30); //
+      spectrum[band] = analogRead(0); // store left band reading
+      digitalWrite(spectrumStrobe,HIGH);
+    }  
+}
 

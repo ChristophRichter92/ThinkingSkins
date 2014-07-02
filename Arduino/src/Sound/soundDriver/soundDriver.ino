@@ -13,9 +13,7 @@
 int spectrumReset=5;
 int spectrumStrobe=4;
 int spectrumAnalog=0;  //0 for left channel, 1 for right.
-
 int band = 0; //used spectrum band
-
 // spectrum analyzer read values will be kept here.
 int spectrum[7];
 

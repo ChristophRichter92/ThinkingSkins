@@ -21,7 +21,7 @@ public class Arduino extends Microcontroller {
 	 */
 	public Arduino(int id, String name) {
 		super(id, name);
-		con = new SerialConnection(9600, "COM4");//"/dev/ttyUSB0");
+		con = new SerialConnection(9600, "/dev/ttyACM0");//"COM4");//"/dev/ttyACM0";
 	}
 
 	/**

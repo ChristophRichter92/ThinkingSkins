@@ -65,7 +65,7 @@ public class SerialConnection implements SerialPortEventListener
             //following line checks whether there is the port i am looking for and whether it is serial
             if(ports.getPortType() == CommPortIdentifier.PORT_SERIAL&&ports.getName().equals(portName))
             { 
-                System.out.println("COM port found: " + portName);
+                System.out.println("Port found: " + portName);
                 portId = ports;                  //initialize my port
                 break;                                                                                     
             }         
@@ -73,7 +73,7 @@ public class SerialConnection implements SerialPortEventListener
         //if serial port am looking for is not found
         if(portId==null)
         {
-        	System.out.println("COM port not found");
+        	System.out.println("Port not found");
         	System.exit(1);
         }
 	}

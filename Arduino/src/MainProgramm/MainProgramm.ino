@@ -56,11 +56,11 @@ void loop() {
   {
     inputString = inputString.substring(0, inputString.length()-1);
     //different commands
-    if(inputString == "Hello")
+    if(inputString == "Hello") //test command
     {
       Serial.println("Hey yo");
     }
-    else if(inputString == "Sound")
+    else if(inputString == "Sound") //test command
     {
       Serial.println("Sounds nice :D");
     }
@@ -75,20 +75,26 @@ void loop() {
       }
       Serial.println(result);
     }
-    else if(inputString == "on()")
+    else if(inputString == "getDistance()") //read distance
     {
-      //write your command here!
+      //TODO: implementation of reading data
+      String result = "";
+      Serial.println(result);
+    }
+    else if(inputString == "on()")  //Backlight on
+    {
+      //TODO: implementation of turning on (white)
       Serial.println("ok");
     }
-    else if(inputString == "off()")
+    else if(inputString == "off()") //Backlight off
     {
-      //write your command here!
+      //TODO: implementation of turning on (white)
       Serial.println("ok");
     }
-    else if(inputString.indexOf("changeColor") >= 0)
+    else if(inputString.indexOf("changeColor") >= 0) //Backlight change color
     {
       //get cmd params
-      //write your command here!
+      //TODO: implementation of changing color
       Serial.println("ok");
     }
     else if(inputString == "your command")

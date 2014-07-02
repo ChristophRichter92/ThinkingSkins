@@ -138,7 +138,7 @@ public class SerialConnection implements SerialPortEventListener
 			} 
 			catch (Exception e) 
 			{
-				System.err.println(e.toString());
+				//System.err.println(e.toString());
 			}
 		}
 		else if(event.getEventType() == SerialPortEvent.OUTPUT_BUFFER_EMPTY)

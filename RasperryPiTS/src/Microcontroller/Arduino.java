@@ -17,11 +17,10 @@ public class Arduino extends Microcontroller {
 	/**
 	 * @param id unique ID
 	 * @param name name of the Arduino
-	 * @param comPort name of the COM port the arduino is connected to
 	 */
 	public Arduino(int id, String name) {
 		super(id, name);
-		con = new SerialConnection(9600, "/dev/ttyACM0");//"COM4");//"/dev/ttyACM0";
+		con = new SerialConnection(9600, "COM4");///dev/ttyACM0");//"COM4");
 	}
 
 	/**

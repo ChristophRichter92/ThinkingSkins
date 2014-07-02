@@ -71,9 +71,25 @@ void loop() {
       String result = "";
       for(int i = 0; i < 7; i++)
       {
-        result = result + " " + spectrum[i];
+        result = result + spectrum[i] + " ";
       }
       Serial.println(result);
+    }
+    else if(inputString == "on()")
+    {
+      //write your command here!
+      Serial.println("ok");
+    }
+    else if(inputString == "off()")
+    {
+      //write your command here!
+      Serial.println("ok");
+    }
+    else if(inputString.indexOf("changeColor") >= 0)
+    {
+      //get cmd params
+      //write your command here!
+      Serial.println("ok");
     }
     else if(inputString == "your command")
     {

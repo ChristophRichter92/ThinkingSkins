@@ -34,7 +34,7 @@ public class Microphone extends Sensor
 		String[] data = rawData.split(" ");
 		for(int i = 0; i < 7; i++)
 		{
-			//values[i] = Integer.parseInt(data[i]);
+			values[i] = Integer.parseInt(data[i]);
 		}
 		return rawData;
 	}

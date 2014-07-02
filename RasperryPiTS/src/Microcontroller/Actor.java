@@ -4,9 +4,11 @@
 package Microcontroller;
 
 /**
- * @author Christoph
  * An actor connected to a microcontroller that can perform 
  * a certain action
+ * 
+ * @author Christoph
+ * 
  */
 public abstract class Actor extends Component {
 	

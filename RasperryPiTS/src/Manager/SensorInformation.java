@@ -50,6 +50,27 @@ public class SensorInformation implements Runnable
 		
 	}
 	
+	/**
+	 * Adds a Listener to the observers
+	 * @param l the listener you want to add
+	 */
+	public void addListener(SensorListener l)
+	{
+		if(!listeners.contains(l))
+		{
+			listeners.add(l);
+		}
+	}
+	
+	/**
+	 * Removes the specified listener from obsevrer list
+	 * @param l the listener you want to remove
+	 */
+	public void removeListener(SensorListener l)
+	{
+		listeners.remove(l);
+	}
+	
 	@Override
 	public void run() 
 	{

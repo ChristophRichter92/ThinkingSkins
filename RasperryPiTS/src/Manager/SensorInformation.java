@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import Microcontroller.Arduino;
-import Microcontroller.Backlight;
 import Microcontroller.DistanceSensor;
+import Microcontroller.Microcontroller;
 import Microcontroller.Microphone;
 import Microcontroller.Sensor;
 
@@ -32,7 +32,7 @@ public class SensorInformation implements Runnable
 	/**
 	 * Constructor initialises the lists
 	 */
-	public SensorInformation(int maxCapacity) 
+	public SensorInformation(Microcontroller micro, int maxCapacity) 
 	{
 		//init variables
 		this.maxCapacity = maxCapacity;
@@ -41,13 +41,15 @@ public class SensorInformation implements Runnable
 		listeners = new ArrayList<SensorListener>();
 		
 		//init Arduino
-		uno = new Arduino(1, "Arduino1");
-		//add available components
-		uno.getConnectedSensors().add(new Microphone(2, "Microfon1", uno));
-		uno.getConnectedSensors().add(new DistanceSensor(3, "Distance1", uno));	
-		//uno.getConnectedActors().add(new Servo(4, "Servo1"));
-		uno.getConnectedActors().add(new Backlight(5, "Backlight"));
-		
+		if(micro instanceof Arduino)
+		{
+			uno = (Arduino) micro;
+		}
+		else
+		{
+			//Error
+			System.err.println("Please connect an Arduino");
+		}
 	}
 	
 	/**

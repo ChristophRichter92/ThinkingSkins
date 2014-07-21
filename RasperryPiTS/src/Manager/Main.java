@@ -4,7 +4,10 @@
 package Manager;
 
 import Microcontroller.Arduino;
+import Microcontroller.Backlight;
+import Microcontroller.DistanceSensor;
 import Microcontroller.Microphone;
+import Microcontroller.ServoController;
 
 /**
  * @author Christoph
@@ -20,7 +23,9 @@ public class Main
 		uno = new Arduino(1, "Arduino1");
 		//add available components
 		uno.getConnectedSensors().add(new Microphone(2, "Microfon1", uno));
-		//TODO add other components
+		uno.getConnectedSensors().add(new DistanceSensor(3, "Distance1", uno));	
+		uno.getConnectedActors().add(new ServoController(4, "Servo1"));
+		uno.getConnectedActors().add(new Backlight(5, "Backlight"));
 	}
 
 	/**

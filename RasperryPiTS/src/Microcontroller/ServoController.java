@@ -52,7 +52,7 @@ public class ServoController extends Actor {
 	 */
 	void move(int x, int y)
 	{
-		//TODO
+		this.getMicrocontroller().sendMessage("move(" + x + ", " + y + ")");
 	}
 
 }

@@ -139,36 +139,42 @@ void loop() {
     }
     else if(inputString == "on()")  //Backlight on
     {
-      //TODO: implementation of turning on (white)
       on();
-      Serial.println("ok");
+      Serial.println("Backlight on");
     }
     else if(inputString == "off()") //Backlight off
     {
       off();
-      Serial.println("ok");
+      Serial.println("Backlight off");
     }
     else if(inputString.indexOf("changeColor") >= 0) //Backlight change color
     {
       //get cmd params
-      //TODO: implementation of changing color
-      Serial.println("ok");
+      int r = parseArgs(inputString, 1).toInt();
+      int g = parseArgs(inputString, 2).toInt();
+      int b = parseArgs(inputString, 3).toInt();
+      //change color
+      changeColor(r, g, b);
+      Serial.println("Color changed to: " + (String)r + (String)g + (String)b);
     }
     else if(inputString == "open()") //Servos to open pos
     {
       open();
-      Serial.println("ok");
+      Serial.println("Position: open");
     }
     else if(inputString == "close()") //Servos to closed pos
     {
       close();
-      Serial.println("ok");
+      Serial.println("Position: closed");
     }
     else if(inputString.indexOf("move") >= 0) //Servos to closed pos
     {
-      //TODO pars args
+      //parse args
+      int x = parseArgs(inputString, 1).toInt();
+      int y = parseArgs(inputString, 2).toInt();
       //move
-      Serial.println("ok");
+      move(x, y);
+      Serial.println("moved to Position: " + (String)x + " " + (String)y);
     }
     else if(inputString == "your command")
     {
@@ -210,6 +216,38 @@ void serialEvent() {
     } 
   }
 }
+
+/*
+* Parses the arguments of an command
+* nr is the first or second ect. argument
+*/
+String parseArgs(String cmd, int nr)
+{
+  //get args
+  int first = cmd.indexOf("(");
+  int second = cmd.indexOf(")");
+  cmd = cmd.substring(first, second);
+  // get arg
+  int b = first;
+  int e = cmd.indexOf(",");
+  cmd = cmd.substring(first+1, b-1);
+  while(nr > 1)
+  {
+      if(nr == 2)
+      {
+        //Last arg
+        b = e;
+        e = second;
+        return cmd.substring(b+1, e-1); 
+      }
+      b = e;
+      e = cmd.indexOf(",");
+      cmd = cmd.substring(b+1, e-1);
+      nr--;
+  }
+  return cmd;  
+}
+
 //--------Sound----------------
 // Read 7 band equalizer.
 void readSpectrum()
@@ -269,6 +307,11 @@ void open()
 }
 
 void close()
+{
+  
+}
+
+void move(int x, int y)
 {
   
 }

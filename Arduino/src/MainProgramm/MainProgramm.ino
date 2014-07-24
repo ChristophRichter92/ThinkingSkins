@@ -2,6 +2,7 @@
 #include <Adafruit_NeoPixel.h>
 #include <Servo.h>
 #include "tsServoDriver.h"
+#include <NewPing.h>
 
 /*
 *  Description:
@@ -11,8 +12,15 @@
 
 //attributes
 
-//LED 
-#define PIN 6
+// Sensor Ultraschall
+ #define MAX_DISTANCE 100
+ #define ECHO_PIN 7
+ #define TRIGGER_PIN  8
+ NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+
+// LEDs
+ #define LED_PIN 6 //~
+ #define NUMLEDS 9
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = pin number (most are valid)
 // Parameter 3 = pixel type flags, add together as needed:
@@ -20,7 +28,7 @@
 // NEO_KHZ400 400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
 // NEO_GRB Pixels are wired for GRB bitstream (most NeoPixel products)
 // NEO_RGB Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(3, PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUMLEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 //Servos
 Servo servoVert;
@@ -76,7 +84,7 @@ void setupLED()
   strip.show(); // Initialize all pixels to 'off'
 }
 
-void setupServos
+void setupServos()
 {
   servoVert.attach(9);  // attaches the servo on pin 9 to the servo object
   servoHori.attach(10);  // attaches the servo on pin 10 to the servo object
@@ -126,8 +134,7 @@ void loop() {
     }
     else if(inputString == "getDistance()") //read distance
     {
-      //TODo implementation of reading data
-      String result = "";
+      String result = getDistance();
       Serial.println(result);
     }
     else if(inputString == "on()")  //Backlight on
@@ -243,4 +250,11 @@ void open()
 void close()
 {
   
+}
+
+//---------Distance--------------
+String getDistance()
+{
+    int distance = sonar.ping_cm();
+    return (String)distance;
 }

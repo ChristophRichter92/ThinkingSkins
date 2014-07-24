@@ -228,17 +228,38 @@ void readSpectrum()
 //----------Backlight-----------
 void on()
 {
-  
+  uint32_t colour = strip.Color(255, 255, 255);
+  uint16_t i = 0;
+  for(i=0; i<NUMLEDS; i++)
+  {
+      strip.setPixelColor(i, colour);
+  }
+  strip.setBrightness(255);
+  strip.show();
 }
 
 void off()
 {
-  
+  uint32_t colour = strip.Color(0, 0, 0);
+  uint16_t i = 0;
+  for(i=0; i<NUMLEDS; i++)
+  {
+      strip.setPixelColor(i, colour);
+  }
+  strip.setBrightness(0);
+  strip.show();
 }
 
 void changeColor(int r, int g, int b)
 {
-  
+  uint32_t colour = strip.Color(r, g, b);
+  uint16_t i = 0;
+  for(i=0; i<NUMLEDS; i++)
+  {
+      strip.setPixelColor(i, colour);
+  }
+  strip.setBrightness(255);
+  strip.show();
 }
 
 //-------------Servos----------

@@ -4,7 +4,10 @@
 package Manager;
 
 import Microcontroller.Arduino;
+import Microcontroller.Backlight;
+import Microcontroller.DistanceSensor;
 import Microcontroller.Microphone;
+import Microcontroller.ServoController;
 
 /**
  * @author Christoph
@@ -14,13 +17,34 @@ public class Main
 {
 	//Global attributes
 	static Arduino uno;
+	static SensorInformation si;
+	static SensorEventHandler seh;
 	
+	/**
+	 * Configures the connected Microcontroller
+	 */
 	public static void initializeSystem()
 	{
 		uno = new Arduino(1, "Arduino1");
 		//add available components
 		uno.getConnectedSensors().add(new Microphone(2, "Microfon1", uno));
-		//TODO add other components
+		uno.getConnectedSensors().add(new DistanceSensor(3, "Distance1", uno));	
+		uno.getConnectedActors().add(new ServoController(4, "Servo1"));
+		uno.getConnectedActors().add(new Backlight(5, "Backlight"));
+	}
+	
+	/**
+	 * Initializes Event Handling
+	 */
+	public static void initEventHandling()
+	{
+		//Create objects
+		si = new SensorInformation(uno, 20);
+		seh = new SensorEventHandler(uno);
+		//register listener
+		si.addListener(seh);
+		//start thread
+		si.run();
 	}
 
 	/**
@@ -28,7 +52,10 @@ public class Main
 	 */
 	public static void main(String[] args) 
 	{
+		//init
 		initializeSystem();
+		initEventHandling();
+		
 		Thread t=new Thread() 
 		{
 			public void run() 

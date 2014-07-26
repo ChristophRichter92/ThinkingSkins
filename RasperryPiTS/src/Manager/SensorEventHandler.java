@@ -3,6 +3,7 @@
  */
 package Manager;
 
+
 import Microcontroller.Actor;
 import Microcontroller.Backlight;
 import Microcontroller.Microcontroller;
@@ -17,25 +18,17 @@ public class SensorEventHandler implements SensorListener
 {
 	//Attributes
 	Microcontroller microController;
+	SensorInformation information;
 	
 	/**
 	 * Constructor
+	 * @param microController the connected microcontroller
+	 * @param informations the information to handle
 	 */
-	public SensorEventHandler(Microcontroller microController) 
+	public SensorEventHandler(Microcontroller microController, SensorInformation information) 
 	{
 		this.microController = microController;
-	}
-
-	/* (non-Javadoc)
-	 * @see Manager.SensorListener#distanceIsLow()
-	 */
-	@Override
-	public void distanceIsLow() 
-	{
-		//Backlight green
-		getBacklight().changeColor(0, 255, 0);
-		//open position
-		getServoController().open();
+		this.information = information;
 	}
 	
 	/**
@@ -72,5 +65,60 @@ public class SensorEventHandler implements SensorListener
 		//no ServoController found
 		System.err.println("No ServoController connected");
 		return null;
+	}
+
+	@Override
+	public void distanceIsLow() 
+	{
+		//Backlight green
+		getBacklight().changeColor(0, 255, 0);
+		//open position
+		getServoController().open();
+	}
+	
+	@Override
+	public void distanceIsNormal() 
+	{
+		//Backlight white
+		getBacklight().changeColor(255, 255, 255);
+	}
+
+	@Override
+	public void soundIsLow() 
+	{
+		//Backlight blue
+		getBacklight().changeColor(0, 0, 255);
+		//open position
+		getServoController().open();
+	}
+
+	@Override
+	public void soundIsHigh() 
+	{
+		//Backlight red
+		getBacklight().changeColor(255, 0, 0);
+		//close position
+		getServoController().close();
+	}
+
+	@Override
+	public void soundIsNormal() 
+	{
+		//get sound level
+		Integer[] level = information.getCurrentSoundLevel();
+		int lower = 0;
+		int upper = 0;
+		for(int i = 0; i < 4; i++)
+		{
+			lower += level[i];
+			upper += level[i+4];
+		}
+		//calculate average soundlevel and scale
+		lower = lower/4/4;
+		upper = upper/4/4;
+		//set Backlight
+		getBacklight().changeColor(lower, 0, upper);
+		//set position
+		getServoController().move(lower, upper);
 	}
 }

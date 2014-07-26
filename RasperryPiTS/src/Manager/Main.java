@@ -40,11 +40,20 @@ public class Main
 	{
 		//Create objects
 		si = new SensorInformation(uno, 20);
-		seh = new SensorEventHandler(uno);
+		seh = new SensorEventHandler(uno, si);
 		//register listener
 		si.addListener(seh);
 		//start thread
 		si.run();
+	}
+	
+	/**
+	 * print the start message to std output
+	 */
+	public static void showStartMessage()
+	{
+		System.out.println("Thinking Skins!");
+		System.out.println("==============================");
 	}
 
 	/**
@@ -53,15 +62,14 @@ public class Main
 	public static void main(String[] args) 
 	{
 		//init
+		showStartMessage();
 		initializeSystem();
 		initEventHandling();
 		
-		Thread t=new Thread() 
+		/*Thread t=new Thread() 
 		{
 			public void run() 
 			{
-				System.out.println("Thinking Skins!");
-				System.out.println("==============================");
 				String out = uno.sendMessage("Hello");
 				System.out.println("You: Hello");
 				System.out.println("Arduino: " + out);
@@ -90,6 +98,6 @@ public class Main
 				System.out.println("Good bye");
 			}
 		};
-		t.start();		
+		t.start();	*/	
 	}
 }

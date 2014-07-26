@@ -58,6 +58,7 @@ public class SerialConnection implements SerialPortEventListener
 	private void initialize()
 	{	
 		CommPortIdentifier ports = null;      //to browse through each port identified
+		@SuppressWarnings("rawtypes")
 		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers(); //store all available ports
         while(portEnum.hasMoreElements()) //browse through available ports
         {  

@@ -11,5 +11,13 @@ import java.util.EventListener;
  */
 public interface SensorListener extends EventListener 
 {
+	//the distance to an object in front of the fassade
 	public void distanceIsLow();
+	public void distanceIsNormal();
+	
+	//it is not that noisy
+	public void soundIsLow();
+	public void soundIsHigh();
+	public void soundIsNormal();
+
 }

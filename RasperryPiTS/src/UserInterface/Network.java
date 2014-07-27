@@ -1,4 +1,4 @@
-package Network;
+package UserInterface;
 
 public class Network {
 

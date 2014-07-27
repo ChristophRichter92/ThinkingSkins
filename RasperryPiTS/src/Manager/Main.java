@@ -46,7 +46,7 @@ public class Main
 		//start thread
 		for(int i = 0; i<10; i++)
 		{
-			si.updateSensorInformation();
+			si.updateInformation();
 		}
 		si.run();
 	}

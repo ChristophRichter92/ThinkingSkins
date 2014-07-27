@@ -3,7 +3,6 @@
  */
 package Manager;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import Microcontroller.Arduino;
@@ -18,13 +17,11 @@ import Microcontroller.Sensor;
  * @author Christoph
  *
  */
-public class SensorInformation implements Runnable
+public class SensorInformation extends Information
 {
 	//attributes
 	private Arduino uno;
-	
-	private ArrayList<SensorListener> listeners;
-	
+		
 	private LinkedList<Long> distanceBuffer;
 	private LinkedList<Integer[]> soundLevelBuffer;
 	private int maxCapacity;
@@ -43,7 +40,6 @@ public class SensorInformation implements Runnable
 		this.maxCapacity = maxCapacity;
 		distanceBuffer = new LinkedList<Long>();
 		soundLevelBuffer = new LinkedList<Integer[]>();
-		listeners = new ArrayList<SensorListener>();
 		
 		//init globals
 		distanceLow = false;
@@ -85,33 +81,12 @@ public class SensorInformation implements Runnable
 		return soundLevelBuffer.getLast();
 	}
 	
-	/**
-	 * Adds a Listener to the observers
-	 * @param l the listener you want to add
-	 */
-	public void addListener(SensorListener l)
-	{
-		if(!listeners.contains(l))
-		{
-			listeners.add(l);
-		}
-	}
-	
-	/**
-	 * Removes the specified listener from obsevrer list
-	 * @param l the listener you want to remove
-	 */
-	public void removeListener(SensorListener l)
-	{
-		listeners.remove(l);
-	}
-	
 	@Override
 	public void run() 
 	{
 		while(true)
 		{
-			updateSensorInformation();
+			updateInformation();
 			analyzeInformation();
 			//Wait for 10ms
 			try {
@@ -126,7 +101,8 @@ public class SensorInformation implements Runnable
 	/**
 	 * get SensorValues from the Arduino saves them into a queue
 	 */
-	public void updateSensorInformation()
+	@Override
+	public void updateInformation()
 	{
 		for(Sensor s : uno.getConnectedSensors())
 		{
@@ -152,7 +128,8 @@ public class SensorInformation implements Runnable
 	/**
 	 * Analyzes Sensor Information and fires events
 	 */
-	private void analyzeInformation()
+	@Override
+	public void analyzeInformation()
 	{
 		//distance
 		if(distanceLow())

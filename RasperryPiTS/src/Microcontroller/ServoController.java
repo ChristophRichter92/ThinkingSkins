@@ -14,8 +14,8 @@ public class ServoController extends Actor {
 	 * @param id
 	 * @param name
 	 */
-	public ServoController(int id, String name) {
-		super(id, name);
+	public ServoController(int id, String name, Microcontroller mc) {
+		super(id, name, mc);
 		// TODO Auto-generated constructor stub
 	}
 

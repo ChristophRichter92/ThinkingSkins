@@ -29,8 +29,8 @@ public class Main
 		//add available components
 		uno.getConnectedSensors().add(new Microphone(2, "Microfon1", uno));
 		uno.getConnectedSensors().add(new DistanceSensor(3, "Distance1", uno));	
-		uno.getConnectedActors().add(new ServoController(4, "Servo1"));
-		uno.getConnectedActors().add(new Backlight(5, "Backlight"));
+		uno.getConnectedActors().add(new ServoController(4, "Servo1", uno));
+		uno.getConnectedActors().add(new Backlight(5, "Backlight", uno));
 	}
 	
 	/**
@@ -44,6 +44,10 @@ public class Main
 		//register listener
 		si.addListener(seh);
 		//start thread
+		for(int i = 0; i<10; i++)
+		{
+			si.updateSensorInformation();
+		}
 		si.run();
 	}
 	
@@ -99,5 +103,6 @@ public class Main
 			}
 		};
 		t.start();	*/	
+		System.exit(0);
 	}
 }

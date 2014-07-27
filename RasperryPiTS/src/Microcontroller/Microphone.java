@@ -45,6 +45,7 @@ public class Microphone extends Sensor
 	 */
 	public Integer[] getSoundLevel() 
 	{
+		System.out.println(readData());
 		return soundLevel;
 	}
 	

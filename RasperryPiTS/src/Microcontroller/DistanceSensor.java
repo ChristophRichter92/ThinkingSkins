@@ -42,6 +42,7 @@ public class DistanceSensor extends Sensor
 	 * @return the distance read from the sensor
 	 */
 	public long getDistance() {
+		System.out.println(readData());
 		return distance;
 	}
 

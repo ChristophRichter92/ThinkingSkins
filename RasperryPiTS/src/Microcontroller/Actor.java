@@ -19,9 +19,9 @@ public abstract class Actor extends Component {
 	 * @param id unique id
 	 * @param name component name
 	 */
-	public Actor(int id, String name) {
+	public Actor(int id, String name, Microcontroller mc) {
 		super(id, name);
-		// TODO Auto-generated constructor stub
+		this.microcontroller = mc;
 	}
 	
 	//abstract methods

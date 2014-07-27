@@ -109,28 +109,31 @@ public class SensorInformation implements Runnable
 	@Override
 	public void run() 
 	{
-		updateSensorInformation();
-		analyzeInformation();
-		//Wait for 10ms
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		while(true)
+		{
+			updateSensorInformation();
+			analyzeInformation();
+			//Wait for 10ms
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	/**
 	 * get SensorValues from the Arduino saves them into a queue
 	 */
-	private void updateSensorInformation()
+	public void updateSensorInformation()
 	{
 		for(Sensor s : uno.getConnectedSensors())
 		{
 			if(s instanceof DistanceSensor)
 			{
 				distanceBuffer.add(((DistanceSensor) s).getDistance());
-				if(distanceBuffer.size() < maxCapacity)
+				if(distanceBuffer.size() > maxCapacity)
 				{
 					distanceBuffer.remove();
 				}
@@ -138,7 +141,7 @@ public class SensorInformation implements Runnable
 			else if(s instanceof Microphone)
 			{
 				soundLevelBuffer.add(((Microphone) s).getSoundLevel());
-				if(soundLevelBuffer.size() < maxCapacity)
+				if(soundLevelBuffer.size() > maxCapacity)
 				{
 					soundLevelBuffer.remove();
 				}

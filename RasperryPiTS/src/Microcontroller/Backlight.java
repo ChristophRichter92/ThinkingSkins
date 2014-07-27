@@ -18,9 +18,9 @@ public class Backlight extends Actor {
 	 * @param id unique ID
 	 * @param name of the Backlight
 	 */
-	public Backlight(int id, String name) 
+	public Backlight(int id, String name, Microcontroller mc) 
 	{
-		super(id, name);
+		super(id, name, mc);
 		// TODO Auto-generated constructor stub
 	}
 

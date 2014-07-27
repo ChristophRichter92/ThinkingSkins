@@ -20,7 +20,7 @@ import Microcontroller.Sensor;
  */
 public class SensorInformation implements Runnable
 {
-	//attrinutes
+	//attributes
 	private Arduino uno;
 	
 	private ArrayList<SensorListener> listeners;
@@ -28,6 +28,11 @@ public class SensorInformation implements Runnable
 	private LinkedList<Long> distanceBuffer;
 	private LinkedList<Integer[]> soundLevelBuffer;
 	private int maxCapacity;
+	
+	//globals var
+	boolean distanceLow;
+	boolean soundLow;
+	boolean soundHigh;
 
 	/**
 	 * Constructor initialises the lists
@@ -40,6 +45,9 @@ public class SensorInformation implements Runnable
 		soundLevelBuffer = new LinkedList<Integer[]>();
 		listeners = new ArrayList<SensorListener>();
 		
+		//init globals
+		distanceLow = false;
+		
 		//init Arduino
 		if(micro instanceof Arduino)
 		{
@@ -50,6 +58,31 @@ public class SensorInformation implements Runnable
 			//Error
 			System.err.println("Please connect an Arduino");
 		}
+	}
+	
+	/**
+	 * @return a copy of the distanceBuffer
+	 */
+	public LinkedList<Long> getDistanceBuffer() {
+		LinkedList<Long> res = new LinkedList<Long>(distanceBuffer);
+		return res;
+	}
+
+	/**
+	 * @return a copy of the soundLevelBuffer
+	 */
+	public LinkedList<Integer[]> getSoundLevelBuffer() {
+		LinkedList<Integer[]> res = new LinkedList<>(soundLevelBuffer);
+		return res;
+	}
+	
+	/**
+	 * 
+	 * @return the current sound level
+	 */
+	public Integer[] getCurrentSoundLevel()
+	{
+		return soundLevelBuffer.getLast();
 	}
 	
 	/**
@@ -118,11 +151,41 @@ public class SensorInformation implements Runnable
 	 */
 	private void analyzeInformation()
 	{
+		//distance
 		if(distanceLow())
 		{
 			for(SensorListener l : listeners)
 			{
 				l.distanceIsLow();
+			}
+		}
+		else
+		{
+			for(SensorListener l : listeners)
+			{
+				l.distanceIsNormal();
+			}
+		}
+		//sound
+		if(soundLow())
+		{
+			for(SensorListener l : listeners)
+			{
+				l.soundIsLow();
+			}
+		}
+		else if(soundHigh())
+		{
+			for(SensorListener l : listeners)
+			{
+				l.soundIsHigh();
+			}
+		}
+		else
+		{
+			for(SensorListener l : listeners)
+			{
+				l.soundIsNormal();
 			}
 		}
 	}
@@ -142,15 +205,81 @@ public class SensorInformation implements Runnable
 		{
 			average += v;
 		}
-		average = average/distanceBuffer.size();
+		average = average/(distanceBuffer.size()+1);
 		
-		//compare to threshold
+		//compare to threshold //TODO only once
 		if(average < threshold)
 		{
+			distanceLow = true;
 			return true;
 		}
 		else
 		{
+			distanceLow = false;
+			return false;
+		}
+	}
+	
+	private boolean soundLow()
+	{
+		final int threshold = 200;
+		int average = 0;
+		for(Integer[] level : soundLevelBuffer)
+		{
+			int max = 0;
+			for(Integer i : level)
+			{
+				if(max < i)
+				{
+					i = max;
+				}
+			}
+			average += max;
+		}
+		average = average/soundLevelBuffer.size();
+		//compare to threshold //TODO only once
+		if(average < threshold)
+		{
+			soundLow = true;
+			return true;
+		}
+		else
+		{
+			soundLow = false;
+			return false;
+		}
+	}
+	
+	/**
+	 * 
+	 * @return True if the sound level exeeds a threshold
+	 */
+	private boolean soundHigh()
+	{
+		final int threshold = 900;
+		int average = 0;
+		for(Integer[] level : soundLevelBuffer)
+		{
+			int max = 0;
+			for(Integer i : level)
+			{
+				if(max < i)
+				{
+					i = max;
+				}
+			}
+			average += max;
+		}
+		average = average+1/soundLevelBuffer.size();
+		//compare to threshold //TODO only once
+		if(average > threshold)
+		{
+			soundHigh = true;
+			return true;
+		}
+		else
+		{
+			soundHigh = false;
 			return false;
 		}
 	}

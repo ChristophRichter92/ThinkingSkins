@@ -50,7 +50,7 @@ public class ServoController extends Actor {
 	 * @param x x-Coordinate
 	 * @param y y-Coordinate
 	 */
-	void move(int x, int y)
+	public void move(int x, int y)
 	{
 		this.getMicrocontroller().sendMessage("move(" + x + ", " + y + ")");
 	}

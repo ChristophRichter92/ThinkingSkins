@@ -67,8 +67,9 @@ public class SensorInformation extends Information
 	/**
 	 * @return a copy of the soundLevelBuffer
 	 */
-	public LinkedList<Integer[]> getSoundLevelBuffer() {
-		LinkedList<Integer[]> res = new LinkedList<>(soundLevelBuffer);
+	public LinkedList<Integer[]> getSoundLevelBuffer() 
+	{
+		LinkedList<Integer[]> res = new LinkedList<Integer[]>(soundLevelBuffer);
 		return res;
 	}
 	

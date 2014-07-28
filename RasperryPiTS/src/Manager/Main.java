@@ -63,7 +63,7 @@ public class Main
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) 
+	public static void execute() 
 	{
 		//init
 		showStartMessage();
@@ -104,5 +104,47 @@ public class Main
 		};
 		t.start();	*/	
 		System.exit(0);
+	}
+	
+	public static void presentation()
+	{
+		System.out.println("Thinking Skins - Presentation Mode");
+		System.out.println("########################################");
+		initializeSystem();
+		Thread t=new Thread() 
+		{
+			public void run() 
+			{
+				String out = uno.sendMessage("Hello");
+				System.out.println("You: Hello");
+				System.out.println("Arduino: " + out);
+				
+				int i = 0;
+				while(i < 60)
+				{
+					//TODO 
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					i++;
+				}
+				
+				//clean up
+				uno.cleanUp();
+		        //Message
+				System.out.println("End...");
+				System.out.println("Good bye");
+			}
+		};
+		t.start();	
+				
+	}
+	
+	public static void main(String[] args)
+	{
+		execute();
 	}
 }

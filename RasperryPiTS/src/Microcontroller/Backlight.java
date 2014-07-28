@@ -30,8 +30,7 @@ public class Backlight extends Actor {
 	@Override
 	void action(int[] args) 
 	{
-		// TODO Auto-generated method stub
-
+		//no default action
 	}
 	
 	/**
@@ -39,7 +38,7 @@ public class Backlight extends Actor {
 	 */
 	public void on()
 	{
-		this.getMicrocontroller().sendMessage("on()");
+		System.out.println(this.getMicrocontroller().sendMessage("on()"));
 	}
 	
 	/**
@@ -47,7 +46,7 @@ public class Backlight extends Actor {
 	 */
 	public void off()
 	{
-		this.getMicrocontroller().sendMessage("off()");
+		System.out.println(this.getMicrocontroller().sendMessage("off()"));
 	}
 	
 	/**
@@ -58,7 +57,7 @@ public class Backlight extends Actor {
 	 */
 	public void changeColor(int r, int g, int b)
 	{
-		this.getMicrocontroller().sendMessage("changeColor(" + r + "," + g + "," + b + ")");
+		System.out.println(this.getMicrocontroller().sendMessage("changeColor(" + r + "," + g + "," + b + ")"));
 	}
 
 }

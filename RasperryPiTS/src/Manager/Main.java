@@ -39,7 +39,7 @@ public class Main
 	public static void initEventHandling()
 	{
 		//Create objects
-		si = new SensorInformation(uno, 20);
+		si = new SensorInformation(uno, 10);
 		seh = new SensorEventHandler(uno, si);
 		//register listener
 		si.addListener(seh);

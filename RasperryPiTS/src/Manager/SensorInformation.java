@@ -180,13 +180,13 @@ public class SensorInformation extends Information
 	private boolean distanceLow()
 	{
 		//get average
-		final long threshold = 20;
+		final long threshold = 50;
 		long average = 0;
-		for(Long v : distanceBuffer)
+		for(int i = 0; i<5; i++)
 		{
-			average += v;
+			average += distanceBuffer.get(i);
 		}
-		average = average/(distanceBuffer.size()+1);
+		average = average/(5);
 		
 		//compare to threshold //TODO only once
 		if(average < threshold)
@@ -203,16 +203,16 @@ public class SensorInformation extends Information
 	
 	private boolean soundLow()
 	{
-		final int threshold = 200;
+		final int threshold = 150;
 		int average = 0;
 		for(Integer[] level : soundLevelBuffer)
 		{
 			int max = 0;
 			for(Integer i : level)
 			{
-				if(max < i)
+				if(max < i.intValue())
 				{
-					i = max;
+					max = i.intValue();
 				}
 			}
 			average += max;
@@ -244,14 +244,14 @@ public class SensorInformation extends Information
 			int max = 0;
 			for(Integer i : level)
 			{
-				if(max < i)
+				if(max < i.intValue())
 				{
-					i = max;
+					max = i.intValue();
 				}
 			}
 			average += max;
 		}
-		average = average+1/soundLevelBuffer.size();
+		average = average/soundLevelBuffer.size();
 		//compare to threshold //TODO only once
 		if(average > threshold)
 		{

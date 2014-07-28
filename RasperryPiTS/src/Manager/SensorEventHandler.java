@@ -115,7 +115,7 @@ public class SensorEventHandler implements SensorListener
 		for(int i = 0; i < 4; i++)
 		{
 			lower += level[i];
-			upper += level[i+4];
+			upper += level[i+3];
 		}
 		//calculate average soundlevel and scale
 		lower = lower/4/4;

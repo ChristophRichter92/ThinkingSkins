@@ -14,7 +14,8 @@ public class ServoController extends Actor {
 	 * @param id
 	 * @param name
 	 */
-	public ServoController(int id, String name, Microcontroller mc) {
+	public ServoController(int id, String name, Microcontroller mc) 
+	{
 		super(id, name, mc);
 		// TODO Auto-generated constructor stub
 	}
@@ -25,8 +26,7 @@ public class ServoController extends Actor {
 	@Override
 	public void action(int[] args) 
 	{
-		// TODO Auto-generated method stub
-		//screensaver
+		//screensaver TODO
 	}
 	
 	/**
@@ -34,7 +34,7 @@ public class ServoController extends Actor {
 	 */
 	public void open()
 	{
-		this.getMicrocontroller().sendMessage("open()");
+		System.out.println(this.getMicrocontroller().sendMessage("open()"));
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class ServoController extends Actor {
 	 */
 	public void close()
 	{
-		this.getMicrocontroller().sendMessage("close()");
+		System.out.println(this.getMicrocontroller().sendMessage("close()"));
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class ServoController extends Actor {
 	 */
 	public void move(int x, int y)
 	{
-		this.getMicrocontroller().sendMessage("move(" + x + ", " + y + ")");
+		System.out.println(this.getMicrocontroller().sendMessage("move(" + x + ", " + y + ")"));
 	}
 
 }

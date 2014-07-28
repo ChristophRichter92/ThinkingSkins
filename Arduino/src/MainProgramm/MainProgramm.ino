@@ -221,37 +221,6 @@ void serialEvent() {
 * Parses the arguments of an command
 * nr is the first or second ect. argument
 */
-String parseArgs(String cmd, int nr)
-{
-  //get args
-  int first = cmd.indexOf("(");
-  int second = cmd.indexOf(")");
-  cmd = cmd.substring(first+1, second);
-  Serial.println(cmd); //debug
-  // get arg
-  int b = first;
-  int e = cmd.indexOf(",");
-  cmd = cmd.substring(b, e);
-  Serial.println(cmd);
-  while(nr > 1)
-  {
-      if(nr == 2)
-      {
-        //Last arg
-        b = e;
-        e = second;
-        Serial.println(cmd);
-        return cmd.substring(b+1, e); 
-      }
-      b = e;
-      e = cmd.indexOf(",");
-      cmd = cmd.substring(b+1, e);
-      Serial.println(cmd);
-      nr--;
-  }
-  return cmd;  
-}
-
 String parseFirstArg(String cmd)
 {
     //get args
@@ -259,7 +228,6 @@ String parseFirstArg(String cmd)
   int second = cmd.indexOf(",");
   cmd = cmd.substring(first+1, second);
   
-  Serial.println("Test 1 " + cmd);
   return cmd;
 }
 
@@ -269,7 +237,6 @@ String parseSecondArg(String cmd)
   int first = cmd.indexOf(",");
   int second = cmd.lastIndexOf(",");
   cmd = cmd.substring(first+1, second);
-  Serial.println("Test 2 " + cmd);
   return cmd;
 }
 
@@ -279,7 +246,6 @@ String parseThirdArg(String cmd)
   int first = cmd.lastIndexOf(",");
   int second = cmd.indexOf(")");
   cmd = cmd.substring(first+1, second);
-  Serial.println("Test 3 " + cmd);
   return cmd;
 }
 

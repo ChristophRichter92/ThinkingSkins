@@ -150,12 +150,12 @@ void loop() {
     else if(inputString.indexOf("changeColor") >= 0) //Backlight change color
     {
       //get cmd params
-      int r = parseArgs(inputString, 1).toInt();
-      int g = parseArgs(inputString, 2).toInt();
-      int b = parseArgs(inputString, 3).toInt();
+      int r = parseFirstArg(inputString).toInt();
+      int g = parseSecondArg(inputString).toInt();
+      int b = parseThirdArg(inputString).toInt();
       //change color
       changeColor(r, g, b);
-      Serial.println("Color changed to: " + (String)r + (String)g + (String)b);
+      Serial.println("Color changed to: " + (String)r + " " + (String)g + " " + (String)b);
     }
     else if(inputString == "open()") //Servos to open pos
     {
@@ -170,8 +170,8 @@ void loop() {
     else if(inputString.indexOf("move") >= 0) //Servos to closed pos
     {
       //parse args
-      int x = parseArgs(inputString, 1).toInt();
-      int y = parseArgs(inputString, 2).toInt();
+      int x = parseFirstArg(inputString).toInt();
+      int y = parseThirdArg(inputString).toInt();
       //move
       move(x, y);
       Serial.println("moved to Position: " + (String)x + " " + (String)y);
@@ -226,11 +226,13 @@ String parseArgs(String cmd, int nr)
   //get args
   int first = cmd.indexOf("(");
   int second = cmd.indexOf(")");
-  cmd = cmd.substring(first, second);
+  cmd = cmd.substring(first+1, second);
+  Serial.println(cmd); //debug
   // get arg
   int b = first;
   int e = cmd.indexOf(",");
-  cmd = cmd.substring(first+1, b-1);
+  cmd = cmd.substring(b, e);
+  Serial.println(cmd);
   while(nr > 1)
   {
       if(nr == 2)
@@ -238,14 +240,47 @@ String parseArgs(String cmd, int nr)
         //Last arg
         b = e;
         e = second;
-        return cmd.substring(b+1, e-1); 
+        Serial.println(cmd);
+        return cmd.substring(b+1, e); 
       }
       b = e;
       e = cmd.indexOf(",");
-      cmd = cmd.substring(b+1, e-1);
+      cmd = cmd.substring(b+1, e);
+      Serial.println(cmd);
       nr--;
   }
   return cmd;  
+}
+
+String parseFirstArg(String cmd)
+{
+    //get args
+  int first = cmd.indexOf("(");
+  int second = cmd.indexOf(",");
+  cmd = cmd.substring(first+1, second);
+  
+  Serial.println("Test 1 " + cmd);
+  return cmd;
+}
+
+String parseSecondArg(String cmd)
+{
+    //get args
+  int first = cmd.indexOf(",");
+  int second = cmd.lastIndexOf(",");
+  cmd = cmd.substring(first+1, second);
+  Serial.println("Test 2 " + cmd);
+  return cmd;
+}
+
+String parseThirdArg(String cmd)
+{
+    //get args
+  int first = cmd.lastIndexOf(",");
+  int second = cmd.indexOf(")");
+  cmd = cmd.substring(first+1, second);
+  Serial.println("Test 3 " + cmd);
+  return cmd;
 }
 
 //--------Sound----------------

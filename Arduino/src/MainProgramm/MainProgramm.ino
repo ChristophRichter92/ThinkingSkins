@@ -303,17 +303,23 @@ void changeColor(int r, int g, int b)
 //-------------Servos----------
 void open()
 {
-  
+  Coord newPos = Coord(0,0);
+  servoVert.write(newPos.getY());
+  servoHori.write(newPos.getX());
 }
 
 void close()
 {
-  
+  Coord newPos = Coord(255,255);
+  servoVert.write(newPos.getY());
+  servoHori.write(newPos.getX());
 }
 
 void move(int x, int y)
 {
-  
+  Coord newPos = Coord(x,y);
+  servoVert.write(newPos.getY());
+  servoHori.write(newPos.getX());
 }
 
 //---------Distance--------------

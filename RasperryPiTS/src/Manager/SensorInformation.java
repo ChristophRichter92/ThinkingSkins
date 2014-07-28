@@ -31,6 +31,7 @@ public class SensorInformation extends Information
 	boolean distanceNormal;
 	boolean soundLow;
 	boolean soundHigh;
+	boolean soundNormal;
 
 	/**
 	 * Constructor initialises the lists
@@ -47,6 +48,7 @@ public class SensorInformation extends Information
 		distanceNormal = false;
 		soundLow = false;
 		soundHigh = false;
+		soundNormal = false;
 		
 		//init Arduino
 		if(micro instanceof Arduino)
@@ -95,7 +97,7 @@ public class SensorInformation extends Information
 			analyzeInformation();
 			//Wait for 10ms
 			try {
-				Thread.sleep(300);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -136,6 +138,22 @@ public class SensorInformation extends Information
 	@Override
 	public void analyzeInformation()
 	{
+		//distance
+		if(distanceLow())
+		{
+			for(SensorListener l : listeners)
+			{
+				l.distanceIsLow();
+				return;
+			}
+		}
+		else if(!distanceLow && !distanceNormal)
+		{
+			for(SensorListener l : listeners)
+			{
+				l.distanceIsNormal();
+			}
+		}
 		//sound
 		if(soundLow())
 		{
@@ -151,26 +169,14 @@ public class SensorInformation extends Information
 				l.soundIsHigh();
 			}
 		}
-		else
+		else if(!soundLow && !soundHigh)
 		{
 			for(SensorListener l : listeners)
 			{
+				soundLow = false;
+				soundHigh = false;
+				soundNormal = true;
 				l.soundIsNormal();
-			}
-		}
-		//distance
-		if(distanceLow())
-		{
-			for(SensorListener l : listeners)
-			{
-				l.distanceIsLow();
-			}
-		}
-		else if(!distanceLow && !distanceNormal)
-		{
-			for(SensorListener l : listeners)
-			{
-				l.distanceIsNormal();
 			}
 		}
 	}
@@ -186,7 +192,7 @@ public class SensorInformation extends Information
 		//get average
 		final long threshold = 50;
 		long average = 0;
-		for(int i = 0; i<5; i++)
+		for(int i = 0; i<2; i++)
 		{
 			if(distanceBuffer.get(i) > 0)	//0 means no echo
 			{
@@ -197,10 +203,10 @@ public class SensorInformation extends Information
 				average += 100;
 			}
 		}
-		average = average/(5);
+		average = average/(2);
 		
 		//compare to threshold //TODO only once
-		if(average < threshold && average != 0 && !distanceLow)
+		if(average < threshold && average != 0)//)!distanceLow)
 		{
 			distanceLow = true;
 			distanceNormal = false;
@@ -232,19 +238,22 @@ public class SensorInformation extends Information
 		}
 		average = average/soundLevelBuffer.size();
 		//compare to threshold //TODO only once
-		if(!soundLow)
-		{
+		
 			if(average < threshold)
 			{
-				soundLow = true;
-				return true;
+				if(!soundLow)
+				{
+					soundLow = true;
+					soundNormal = false;
+					soundHigh = false;
+					return true;
+				}
 			}
 			else
 			{
 				soundLow = false;
 				return false;
 			}
-		}
 		return false;
 	}
 	
@@ -270,18 +279,21 @@ public class SensorInformation extends Information
 		}
 		average = average/soundLevelBuffer.size();
 		//compare to threshold //TODO only once
-		if(!soundHigh)
+		
+		if(average > threshold)
 		{
-			if(average > threshold)
+			if(!soundHigh)
 			{
+				soundLow = false;
+				soundNormal = false;
 				soundHigh = true;
 				return true;
 			}
-			else
-			{
-				soundHigh = false;
-				return false;
-			}
+		}
+		else
+		{
+			soundHigh = false;
+			return false;
 		}
 		return false;
 	}

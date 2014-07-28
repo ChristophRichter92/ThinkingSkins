@@ -34,12 +34,20 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUMLEDS, LED_PIN, NEO_GRB + NEO_KHZ8
 Servo servoVert;
 Servo servoHori;
 
-int VERT_MIN = 70;
-int HORI_MIN = 85;
-int VERT_MID = 75;
-int HORI_MID = 130;
-int VERT_MAX = 125;
-int HORI_MAX = 180;
+// Servo calibration
+#define VERT_MIN 70
+#define HORI_MIN 85
+#define VERT_MID 75
+#define HORI_MID 130
+#define VERT_MAX 125
+#define HORI_MAX 180
+
+#define OPENX
+#define OPENY
+// calculation of the vertical and horizontal ranges
+#define VERT_RANGE (VERT_MAX - VERT_MIN)
+#define HORI_RANGE (HORI_MAX - HORI_MIN)
+
 // global offset variable
 Coord offset(HORI_MID, VERT_MID);
 int up = 1;
@@ -305,22 +313,51 @@ void changeColor(int r, int g, int b)
 void open()
 {
   Coord newPos = Coord(0,0);
-  servoVert.write(newPos.getY());
-  servoHori.write(newPos.getX());
+  setServos(newPos);
 }
 
 void close()
 {
   Coord newPos = Coord(255,255);
-  servoVert.write(newPos.getY());
-  servoHori.write(newPos.getX());
+  setServos(newPos);
 }
 
 void move(int x, int y)
 {
   Coord newPos = Coord(x,y);
+  setServos(newPos);
+}
+
+void setServos(Coord newPos)
+{
+  //Serial.println(newPos.getX());
+  //Serial.println(newPos.getX()/255);
+  //Serial.println(round(( (float)newPos.getX()/255 ) * HORI_RANGE));
+  int xOfRange = round(( (float)newPos.getX()/255 ) * HORI_RANGE);
+  int yOfRange = round(( (float)newPos.getY()/255 ) * VERT_RANGE);
+  setServosAbsolute(HORI_MIN + xOfRange, VERT_MIN + yOfRange);
+}
+
+/**
+ * Sets the servos to a true value (between 0 and 180) even though that might
+ * might be out of range for the actual setup.
+ * @private
+ */
+void setServosAbsolute(Coord newPos)
+{
   servoVert.write(newPos.getY());
   servoHori.write(newPos.getX());
+}
+
+/**
+ * Sets the servos to a true value (between 0 and 180) even thgough that might
+ * might be out of range for the actual setup.
+ * @private
+ */
+void setServosAbsolute(int x, int y)
+{
+  servoVert.write(y);
+  servoHori.write(x);
 }
 
 //---------Distance--------------

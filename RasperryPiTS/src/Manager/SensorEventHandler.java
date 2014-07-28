@@ -71,7 +71,7 @@ public class SensorEventHandler implements SensorListener
 	public void distanceIsLow() 
 	{
 		//Backlight green
-		getBacklight().changeColor(0, 255, 0);
+		getBacklight().changeColor(0, 0, 255);
 		//open position
 		getServoController().open();
 		System.out.println("distance Low");
@@ -81,7 +81,7 @@ public class SensorEventHandler implements SensorListener
 	public void distanceIsNormal() 
 	{
 		//Backlight white
-		getBacklight().changeColor(255, 255, 255);
+		//getBacklight().changeColor(255, 255, 255);
 		System.out.println("distance Normal");
 	}
 
@@ -89,7 +89,7 @@ public class SensorEventHandler implements SensorListener
 	public void soundIsLow() 
 	{
 		//Backlight blue
-		getBacklight().changeColor(0, 0, 255);
+		getBacklight().changeColor(0, 255, 0);
 		//open position
 		getServoController().open();
 		System.out.println("Sound Low");
@@ -121,7 +121,7 @@ public class SensorEventHandler implements SensorListener
 		lower = lower/4/4;
 		upper = upper/4/4;
 		//set Backlight
-		getBacklight().changeColor(lower, 0, upper);
+		getBacklight().changeColor(upper, 255-lower, 0);
 		//set position
 		getServoController().move(lower, upper);
 		System.out.println("Sound Normal");

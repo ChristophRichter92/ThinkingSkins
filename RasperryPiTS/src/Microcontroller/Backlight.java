@@ -57,7 +57,7 @@ public class Backlight extends Actor {
 	 */
 	public void changeColor(int r, int g, int b)
 	{
-		System.out.println(this.getMicrocontroller().sendMessage("changeColor(" + r + "," + g + "," + b + ")"));
+		this.getMicrocontroller().sendMessage("changeColor(" + r + "," + g + "," + b + ")");
 	}
 
 }

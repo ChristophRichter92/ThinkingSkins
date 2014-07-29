@@ -36,16 +36,14 @@ Servo servoHori;
 
 // Servo calibration
 #define VERT_MIN 70
-#define HORI_MIN 90
-#define VERT_MID 95
-#define HORI_MID 125
+#define HORI_MIN 85
+#define VERT_MID 75
+#define HORI_MID 130
 #define VERT_MAX 125
 #define HORI_MAX 180
 
-#define OPENX 125
-#define OPENY 95
-#define CLOSEX 146
-#define CLOSEY 113
+#define OPENX
+#define OPENY
 // calculation of the vertical and horizontal ranges
 #define VERT_RANGE (VERT_MAX - VERT_MIN)
 #define HORI_RANGE (HORI_MAX - HORI_MIN)
@@ -120,6 +118,7 @@ void setup() //initialize
 
 //main loop
 void loop() {  
+  int delayTime = 100;
   // print the string when a newline arrives:
   if (stringComplete) 
   {
@@ -127,10 +126,12 @@ void loop() {
     //different commands
     if(inputString == "Hello") //test command
     {
+      delay(delayTime);
       Serial.println("Hey yo");
     }
     else if(inputString == "Sound") //test command
     {
+      delay(delayTime);
       Serial.println("Sounds nice :D");
     }
     else if(inputString == "getSound()") //read Soundlevel
@@ -142,21 +143,25 @@ void loop() {
       {
         result = result + spectrum[i] + " ";
       }
+      delay(delayTime);
       Serial.println(result);
     }
     else if(inputString == "getDistance()") //read distance
     {
       String result = getDistance();
+      delay(delayTime);
       Serial.println(result);
     }
     else if(inputString == "on()")  //Backlight on
     {
       on();
+      delay(delayTime);
       Serial.println("Backlight on");
     }
     else if(inputString == "off()") //Backlight off
     {
       off();
+      delay(delayTime);
       Serial.println("Backlight off");
     }
     else if(inputString.indexOf("changeColor") >= 0) //Backlight change color
@@ -167,16 +172,19 @@ void loop() {
       int b = parseThirdArg(inputString).toInt();
       //change color
       changeColor(r, g, b);
+      delay(delayTime);
       Serial.println("Color changed to: " + (String)r + " " + (String)g + " " + (String)b);
     }
     else if(inputString == "open()") //Servos to open pos
     {
       open();
+      delay(delayTime);
       Serial.println("Position: open");
     }
     else if(inputString == "close()") //Servos to closed pos
     {
       close();
+      delay(delayTime);
       Serial.println("Position: closed");
     }
     else if(inputString.indexOf("move") >= 0) //Servos to closed pos
@@ -186,21 +194,14 @@ void loop() {
       int y = parseThirdArg(inputString).toInt();
       //move
       move(x, y);
+      delay(delayTime);
       Serial.println("moved to Position: " + (String)x + " " + (String)y);
     }
     else if(inputString == "present()")
     {
+      delay(delayTime);
       Serial.println("Please wait and enjoy the show");
       present();
-    }
-    else if(inputString.indexOf("absMove") >= 0) //Servos to closed pos
-    {
-      //parse args
-      int x = parseFirstArg(inputString).toInt();
-      int y = parseThirdArg(inputString).toInt();
-      //move
-      moveAbs(x, y);
-      Serial.println("moved to absolute Position: " + (String)x + " " + (String)y);
     }
     else if(inputString == "your command")
     {
@@ -209,6 +210,7 @@ void loop() {
     else
     {
       //default echo
+      delay(delayTime);
       Serial.println(inputString);
     }
     digitalWrite(13, LOW); 
@@ -253,6 +255,7 @@ String parseFirstArg(String cmd)
   int first = cmd.indexOf("(");
   int second = cmd.indexOf(",");
   cmd = cmd.substring(first+1, second);
+  
   return cmd;
 }
 
@@ -327,29 +330,21 @@ void changeColor(int r, int g, int b)
 }
 
 //-------------Servos----------
-// Sets the front plate to the open position (calibration above)
 void open()
 {
-  int x, y;
-  x = round(((float)(OPENX-HORI_MIN)/HORI_RANGE) * 255);
-  y = round(((float)(OPENY-VERT_MIN)/VERT_RANGE) * 255);
-  move(x, y);
+  move(0,0);
 }
 
-// Sets the front plate to the close position (calibration above)
 void close()
 {
-  int x, y;
-  x = round(((float)(CLOSEX-HORI_MIN)/HORI_RANGE) * 255);
-  y = round(((float)(CLOSEY-VERT_MIN)/VERT_RANGE) * 255);
-  move(x, y);
+  move(255,255);
 }
 
 void move(int x, int y)
 {
   Coord newPos = Coord(x,y);
   //get distance
-  int steps = 20;
+  int steps = 10;
   int dx = x-xPosition;
   int dy = y-yPosition;
   int xStepSize = dx/steps;
@@ -363,32 +358,7 @@ void move(int x, int y)
     newPos = Coord(xPosition, yPosition);
     setServos(newPos);
     i++;
-    delay(20);  
-  }
-  //setServos(newPos);
-}
-
-// Used for calibration of the front plate position.
-// The serial command using this function is absMove(number, number).
-void moveAbs(int x, int y)
-{
-  Coord newPos = Coord(x,y);
-  //get distance
-  int steps = 20;
-  int dx = x-xPosition;
-  int dy = y-yPosition;
-  int xStepSize = dx/steps;
-  int yStepSize = dy/steps;
-  
-  int i = 0;
-  while(i<steps)
-  {
-    xPosition += xStepSize;
-    yPosition += yStepSize;
-    newPos = Coord(xPosition, yPosition);
-    setServosAbsolute(newPos);
-    i++;
-    delay(20);  
+    delay(30);  
   }
   //setServos(newPos);
 }

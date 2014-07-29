@@ -52,6 +52,8 @@ Servo servoHori;
 Coord offset(HORI_MID, VERT_MID);
 int up = 1;
 int left = 1;
+int xPosition = 0;
+int yPosition = 0;
 
 
  //Sound
@@ -317,20 +319,35 @@ void changeColor(int r, int g, int b)
 //-------------Servos----------
 void open()
 {
-  Coord newPos = Coord(0,0);
-  setServos(newPos);
+  move(0,0);
 }
 
 void close()
 {
-  Coord newPos = Coord(255,255);
-  setServos(newPos);
+  move(255,255);
 }
 
 void move(int x, int y)
 {
   Coord newPos = Coord(x,y);
-  setServos(newPos);
+  //get distance
+  int steps = 10;
+  int dx = x-xPosition;
+  int dy = y-yPosition;
+  int xStepSize = dx/steps;
+  int yStepSize = dy/steps;
+  
+  int i = 0;
+  while(i<steps)
+  {
+    xPosition += xStepSize;
+    yPosition += yStepSize;
+    newPos = Coord(xPosition, yPosition);
+    setServos(newPos);
+    i++;
+    delay(30);  
+  }
+  //setServos(newPos);
 }
 
 void setServos(Coord newPos)

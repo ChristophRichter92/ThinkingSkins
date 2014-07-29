@@ -247,6 +247,9 @@ public class SensorInformation extends Information
 		{
 			distanceLow = true;
 			distanceNormal = false;
+			soundLow = false;
+			soundHigh = false;
+			soundNormal = false;
 			return true;
 		}
 		else

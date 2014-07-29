@@ -19,5 +19,8 @@ public interface SensorListener extends EventListener
 	public void soundIsLow();
 	public void soundIsHigh();
 	public void soundIsNormal();
+	
+	//gestures
+	public void present();
 
 }

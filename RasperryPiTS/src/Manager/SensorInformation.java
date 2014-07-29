@@ -138,6 +138,15 @@ public class SensorInformation extends Information
 	@Override
 	public void analyzeInformation()
 	{
+		//gestures
+		if(gesturePresent())
+		{
+			for(SensorListener l : listeners)
+			{
+				l.present();
+			}
+		}
+		
 		//distance
 		if(distanceLow())
 		{
@@ -183,6 +192,34 @@ public class SensorInformation extends Information
 	
 	//Events
 	//---------------------------------------------------------------------
+	private boolean gesturePresent()
+	{
+		final long threshold = 5;
+		long average = 0;
+		for(int i = 0; i<2; i++)
+		{
+			if(distanceBuffer.get(i) > 0)	//0 means no echo
+			{
+				average += distanceBuffer.get(i);
+			}
+			else
+			{
+				average += 100;
+			}
+		}
+		average = average/(2);
+		
+		//compare to threshold 
+		if(average < threshold)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	/**
 	 * The average distance form any Object to the Sensor falls under a specified level
 	 * @return true if the distance ist lower than the threshold

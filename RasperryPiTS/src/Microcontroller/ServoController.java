@@ -26,7 +26,7 @@ public class ServoController extends Actor {
 	@Override
 	public void action(int[] args) 
 	{
-		//screensaver TODO
+		System.out.println(this.getMicrocontroller().sendMessage("present()"));
 	}
 	
 	/**

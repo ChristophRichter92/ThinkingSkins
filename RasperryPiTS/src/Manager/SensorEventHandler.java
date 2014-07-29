@@ -126,4 +126,19 @@ public class SensorEventHandler implements SensorListener
 		getServoController().move(lower, upper);
 		System.out.println("Sound Normal");
 	}
+
+	/**
+	 * starts presentation mode
+	 */
+	@Override
+	public void present() 
+	{
+		getServoController().action(null);
+		try {
+			Thread.sleep(17000);	//warte 17s
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

@@ -184,6 +184,11 @@ void loop() {
       move(x, y);
       Serial.println("moved to Position: " + (String)x + " " + (String)y);
     }
+    else if(inputString == "present()")
+    {
+      Serial.println("Please wait and enjoy the show");
+      present();
+    }
     else if(inputString == "your command")
     {
       //write your command here!
@@ -358,6 +363,32 @@ void setServosAbsolute(int x, int y)
 {
   servoVert.write(y);
   servoHori.write(x);
+}
+
+void present()
+{
+  int i = 0;
+  while(i < 1000)
+  {
+    // This moves the plate like an old windows screensaver.
+    if(offset.getY() >= VERT_MAX) up = 0;
+    if(offset.getX() >= HORI_MAX) left = 0;
+    if(offset.getY() <= VERT_MIN) up = 1;
+    if(offset.getX() <= HORI_MIN) left = 1;
+    
+    if(up == 1){
+      offset.incY();
+    } else offset.decY();
+    
+    if(left == 1){
+      offset.incX();
+    } else offset.decX();
+    //*/
+    // do this every loop
+    setServos(offset);
+    i++;
+    delay(15);
+  } 
 }
 
 //---------Distance--------------
